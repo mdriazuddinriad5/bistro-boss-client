@@ -2,12 +2,16 @@ import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../../providers/AuthProvider";
 import { Helmet } from "react-helmet-async";
+import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 
 const SignUp = () => {
-    const { register, handleSubmit, formState: { errors }, } = useForm()
+    const { register, handleSubmit, reset, formState: { errors }, } = useForm()
 
-    const { createUser } = useContext(AuthContext);
+    const { createUser, updateUserProfile, logOut } = useContext(AuthContext);
+
+    const navigate= useNavigate();
 
     const onSubmit = (data) => {
         console.log(data)
@@ -15,6 +19,30 @@ const SignUp = () => {
             .then(result => {
                 const loggedUser = result.user;
                 console.log(loggedUser);
+
+                updateUserProfile(data.name, data.photoURL)
+                    .then(() => {
+                        console.log("Profile updated");
+                        reset();
+                        Swal.fire({
+                            title: "Sweet!",
+                            text: "User created successfully",
+                            imageUrl: data.photoURL,
+                            imageWidth: 400,
+                            imageHeight: 200,
+                            imageAlt: "Custom image"
+                        });
+                        // navigate('/')
+                        logOut()
+                        .then(()=>{
+                            navigate('/login')
+                        })
+                       
+
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
             })
 
     }
@@ -35,10 +63,17 @@ const SignUp = () => {
                         <form onSubmit={handleSubmit(onSubmit)} className="card-body">
                             <div className="form-control">
                                 <label className="label">
-                                    <span className="label-text">Email</span>
+                                    <span className="label-text">Name</span>
                                 </label>
                                 <input type="text" placeholder="name" {...register("name", { required: true })} name="name" className="input input-bordered" />
                                 {errors.name && <span className="text-red-600">Name is required</span>}
+                            </div>
+                            <div className="form-control">
+                                <label className="label">
+                                    <span className="label-text">Photo URL</span>
+                                </label>
+                                <input type="text" placeholder="Photo URL" {...register("photoURL", { required: true })} className="input input-bordered" />
+                                {errors.photoURL && <span className="text-red-600">Photo URL is required</span>}
                             </div>
                             <div className="form-control">
                                 <label className="label">
@@ -79,6 +114,7 @@ const SignUp = () => {
                                 <button className="btn btn-primary">Register</button>
                             </div>
                         </form>
+                        <p className='text-center pb-3'><small>Already have an account??</small> <Link to={'/login'}>Login</Link></p>
                     </div>
                 </div>
             </div>

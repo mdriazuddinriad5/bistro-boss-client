@@ -4,6 +4,8 @@ import { AuthContext } from "../../providers/AuthProvider";
 import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
+import SocialLogin from "../../components/SocialLogin/SocialLogin";
 
 
 const SignUp = () => {
@@ -11,10 +13,11 @@ const SignUp = () => {
 
     const { createUser, updateUserProfile, logOut } = useContext(AuthContext);
 
-    const navigate= useNavigate();
+    const navigate = useNavigate();
+
+    const axiosPublic = useAxiosPublic();
 
     const onSubmit = (data) => {
-        console.log(data)
         createUser(data.email, data.password)
             .then(result => {
                 const loggedUser = result.user;
@@ -24,20 +27,31 @@ const SignUp = () => {
                     .then(() => {
                         console.log("Profile updated");
                         reset();
-                        Swal.fire({
-                            title: "Sweet!",
-                            text: "User created successfully",
-                            imageUrl: data.photoURL,
-                            imageWidth: 400,
-                            imageHeight: 200,
-                            imageAlt: "Custom image"
-                        });
+                        // posting user data to server
+                        const userData = {
+                            name: data.name,
+                            email: data.email
+                        }
+                        axiosPublic.post('/users', userData)
+                            .then(res => {
+                                if (res.data.insertedId) {
+                                    Swal.fire({
+                                        title: "Sweet!",
+                                        text: "User created successfully",
+                                        imageUrl: data.photoURL,
+                                        imageWidth: 400,
+                                        imageHeight: 200,
+                                        imageAlt: "Custom image"
+                                    });
+                                }
+                            })
+
                         // navigate('/')
                         logOut()
-                        .then(()=>{
-                            navigate('/login')
-                        })
-                       
+                            .then(() => {
+                                navigate('/login')
+                            })
+
 
                     })
                     .catch(error => {
@@ -115,6 +129,7 @@ const SignUp = () => {
                             </div>
                         </form>
                         <p className='text-center pb-3'><small>Already have an account??</small> <Link to={'/login'}>Login</Link></p>
+                        <SocialLogin></SocialLogin>
                     </div>
                 </div>
             </div>

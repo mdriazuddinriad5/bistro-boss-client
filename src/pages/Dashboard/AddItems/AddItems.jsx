@@ -15,7 +15,7 @@ const AddItems = () => {
     const axiosSecure = useAxiosSecure();
 
     const onSubmit = async (data) => {
-        console.log(data)
+        console.log(data.image[0])
         // image upload to imgbb and then get an url
         const imageFile = { image: data.image[0] };
         const res = await axiosPublic.post(image_hosting_api, imageFile, {
@@ -108,6 +108,7 @@ const AddItems = () => {
                             type="file"
                             className="file-input w-full max-w-xs" />
                     </div>
+                    
 
                     <button className="btn">
                         Add Item <FaUtensils className="ml-4"></FaUtensils>

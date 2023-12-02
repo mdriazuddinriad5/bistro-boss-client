@@ -31,6 +31,8 @@ const CheckoutForm = () => {
         }
     }, [axiosSecure, totalPrice])
 
+    console.log(clientSecret);
+
 
     const handleSubmit = async (event) => {
         event.preventDefault();

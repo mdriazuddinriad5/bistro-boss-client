@@ -7,6 +7,7 @@ const Payment = () => {
 
     //TODO: add publishable key
     const stripePromise = loadStripe(import.meta.env.VITE_Payment_Gateway_PK);
+    console.log(stripePromise);
     return (
         <div>
             <SectionTitle heading={"Payment"} subHeading={"Please pay to eat"}></SectionTitle>

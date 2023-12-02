@@ -4,7 +4,7 @@ import useAuth from "./useAuth";
 
 
 const axiosSecure = axios.create({
-    baseURL: 'http://localhost:5000'
+    baseURL: 'https://bistro-boss-server-pi-two.vercel.app'
 })
 
 const useAxiosSecure = () => {
@@ -13,7 +13,7 @@ const useAxiosSecure = () => {
 
     axiosSecure.interceptors.request.use((config) => {
         const token = localStorage.getItem('access-token');
-        // console.log(`request stopped by interceptor ${token}`);
+        console.log(`request stopped by interceptor ${token}`);
         config.headers.authorization = `Bearer ${token}`
         return config;
     }, (error) => {

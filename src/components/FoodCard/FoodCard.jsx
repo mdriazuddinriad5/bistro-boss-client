@@ -29,7 +29,7 @@ const FoodCard = ({ item }) => {
                 image
             }
 
-            /*  axios.post('http://localhost:5000/carts', cartItem)
+            /*  axios.post('https://bistro-boss-server-pi-two.vercel.app/carts', cartItem)
                  .then(res => {
                      console.log(res.data);
                      if (res.data.insertedId) {
